@@ -3,7 +3,6 @@ package core.server.session;
 import java.util.Random;
 
 import com.google.inject.Inject;
-import com.google.inject.name.Named;
 
 public class RandomSessionGen implements ISessionGen {
 	
@@ -13,7 +12,7 @@ public class RandomSessionGen implements ISessionGen {
 	@Inject
 	RandomSessionGen(
 			Random r,
-			@Named("Universe") String idUniverse){
+			@Session String idUniverse){
 		this.r = r;
 		this.idUniverse = idUniverse;
 	}

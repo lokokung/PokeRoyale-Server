@@ -1,40 +1,38 @@
 package core.server;
 
-import java.util.Random;
+import java.io.IOException;
+import java.net.ServerSocket;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
-import com.google.inject.name.Named;
-
-import core.server.session.ISessionGen;
-import core.server.session.RandomSessionGen;
+import com.google.inject.Singleton;
 
 public class ServerModule extends AbstractModule{
 
 	@Override
 	protected void configure() {
-		bind(ISessionGen.class).to(RandomSessionGen.class);
 		
 	}
 	
 	@Provides
-	Random getRandomNumberGenerator(){
-		Random r = new Random();
-		r.setSeed(System.currentTimeMillis());
-		return r;
+	@Singleton
+	Gson provideGson(){
+		GsonBuilder gsonBuilder = new GsonBuilder();
+		return gsonBuilder.serializeNulls().create();
 	}
 	
 	@Provides
-	@Named("Universe")
-	String getSessionIdUnivers(){
-		String universe = "";
-		for(char c = 'a'; c <= 'z'; ++c)
-			universe += c;
-		for(char c = 'A'; c <= 'Z'; ++c)
-			universe += c;
-		for(char c = '0'; c <= '9'; ++c)
-			universe += c;
-		return universe;
+	@Singleton
+	ServerSocket provideServerSocket(){
+		try {
+			ServerSocket serverSocket = new ServerSocket(5000);
+			return serverSocket;
+		} catch (IOException e) {
+			System.out.println("Unable to bind to designated port.");
+		}
+		return null;
 	}
 
 }
